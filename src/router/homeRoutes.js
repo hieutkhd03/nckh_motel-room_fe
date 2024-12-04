@@ -1,13 +1,12 @@
 // Import tất cả các component từ thư mục home/components
 import HomePage from "@/components/home/HomePage.vue";
 import Criteria from "@/components/home/components/Criteria.vue";
-import RoomList from "@/components/home/components/RoomList.vue";
 import SearchBar from "@/components/home/components/SearchBar.vue";
 import SearchResult from "@/components/home/components/SearchResult.vue";
 
 export default [
   {
-    path: "/",
+    path: "/home",
     name: "HomePage",
     component: HomePage,
     meta: {
@@ -18,14 +17,6 @@ export default [
     path: "/criteria",
     name: "Criteria",
     component: Criteria,
-    meta: {
-      requiresAuth: false,
-    },
-  },
-  {
-    path: "/rooms",
-    name: "RoomList",
-    component: RoomList,
     meta: {
       requiresAuth: false,
     },

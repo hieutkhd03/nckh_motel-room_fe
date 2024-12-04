@@ -1,6 +1,6 @@
 // Import các component cần thiết
 import Login from "@/components/auth/Login.vue";
-import Logout from "@/components/auth/logout.vue";
+import Logout from "@/components/auth/Logout.vue";
 import Register from "@/components/auth/Register.vue";
 
 export default [

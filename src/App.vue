@@ -1,32 +1,32 @@
 <template>
   <v-app>
-    <!-- Header -->
+    <!-- Header
     <HeaderComponent />
 
-    <!-- Sidebar -->
-    <SidebarComponent />
+    Sidebar -->
+    <!-- <SidebarComponent /> -->
 
     <!-- Nội dung chính -->
     <v-main>
       <router-view />
     </v-main>
 
-    <!-- Footer -->
-    <FooterComponent />
+    <!-- Footer
+    <FooterComponent /> -->
   </v-app>
 </template>
 
 <script>
-import HeaderComponent from "@/common/Header.vue";
-import SidebarComponent from "@/common/Sidebar.vue";
-import FooterComponent from "@/common/Footer.vue";
+// import HeaderComponent from "@/components/common/Header.vue";
+// import SidebarComponent from "@/components/common/Sidebar.vue";
+// import FooterComponent from "@/components/common/Footer.vue";
 
 export default {
   name: "App",
   components: {
-    HeaderComponent,
-    SidebarComponent,
-    FooterComponent,
+    // HeaderComponent,
+    // SidebarComponent,
+    // FooterComponent,
   },
 };
 </script>
