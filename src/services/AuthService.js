@@ -3,29 +3,29 @@ import axios from "axios";
 const API_URL = "http://localhost:8080/auth/"; // Cập nhật URL với prefix '/auth'
 
 class AuthService {
-  // Đăng nhập: Gửi email và password, nhận về token và fullName
+  // Đăng nhập: Gửi email và password, nhận về token và thông tin người dùng
   login(email, password) {
     return axios
-      .post(API_URL + "login", { email, password }) // Gửi email và password đến '/auth/login'
+      .post(API_URL + "login", { email, password })
       .then((response) => {
-        if (response.data.token) {
-          // Lưu token và thông tin người dùng vào localStorage và cookie
-          localStorage.setItem("user", JSON.stringify(response.data));
-          this.setCookie(
-            "user",
-            JSON.stringify({
-              token: response.data.token,
-              fullName: response.data.fullName,
-              email: email, // Lưu email vào cookie để dùng sau
-            }),
-            1
-          ); // Lưu cookie trong 1 ngày
+        if (response.data && response.data.data && response.data.data.token) {
+          const userData = response.data.data; // Lấy dữ liệu từ backend
+          localStorage.setItem("user", JSON.stringify(userData)); // Lưu dữ liệu vào localStorage
+          return userData; // Trả về dữ liệu đã xử lý
+        } else {
+          // Nếu không có token, ném lỗi
+          throw new Error("Không nhận được token từ server.");
         }
-        return response.data;
       })
       .catch((error) => {
-        console.error("Login failed: ", error);
-        throw error; // Bắt lỗi nếu có lỗi khi đăng nhập
+        // Xử lý lỗi từ BE hoặc lỗi khác
+        const errorMessage =
+          (error.response &&
+            error.response.data &&
+            error.response.data.message) ||
+          error.message ||
+          "Đăng nhập thất bại. Vui lòng thử lại!";
+        throw new Error(errorMessage);
       });
   }
 
@@ -42,52 +42,27 @@ class AuthService {
       });
   }
 
-  // Đăng xuất: Xóa thông tin người dùng khỏi localStorage và cookie
+  // Đăng xuất: Xóa thông tin người dùng khỏi localStorage
   logout() {
-    this.deleteCookie("user"); // Xóa cookie user
     localStorage.removeItem("user"); // Xóa thông tin người dùng trong localStorage
   }
 
-  // Lấy thông tin người dùng hiện tại từ cookie
+  // Lấy thông tin người dùng hiện tại từ localStorage
   getCurrentUser() {
-    const user = this.getCookie("user");
-    return user ? JSON.parse(user) : null;
+    const user = localStorage.getItem("user"); // Lấy dữ liệu từ localStorage
+    return user ? JSON.parse(user) : null; // Parse dữ liệu thành object
   }
 
-  // Lấy vai trò người dùng hiện tại
+  // Lấy vai trò người dùng hiện tại từ thông tin BE trả về
   getCurrentUserRole() {
     const user = this.getCurrentUser();
-    return user ? user.role : null;
+    return user ? user.role : null; // Trả về role nếu tồn tại
   }
 
-  // Lấy header Authorization để gửi cùng với yêu cầu API (JWT token)
+  // Tạo header Authorization (JWT token) để gửi cùng với yêu cầu API
   authHeader() {
     const user = this.getCurrentUser();
     return user && user.token ? { Authorization: "Bearer " + user.token } : {};
-  }
-
-  // Đặt giá trị cookie
-  setCookie(name, value, days) {
-    const date = new Date();
-    date.setTime(date.getTime() + days * 24 * 60 * 60 * 1000); // Thời gian hết hạn cookie
-    document.cookie = `${name}=${value}; expires=${date.toUTCString()}; path=/`;
-  }
-
-  // Lấy giá trị cookie
-  getCookie(name) {
-    const nameEQ = name + "=";
-    const ca = document.cookie.split(";");
-    for (let i = 0; i < ca.length; i++) {
-      let c = ca[i];
-      while (c.charAt(0) === " ") c = c.substring(1, c.length);
-      if (c.indexOf(nameEQ) === 0) return c.substring(nameEQ.length, c.length);
-    }
-    return null;
-  }
-
-  // Xóa cookie
-  deleteCookie(name) {
-    document.cookie = `${name}=; Max-Age=-99999999; path=/`;
   }
 }
 

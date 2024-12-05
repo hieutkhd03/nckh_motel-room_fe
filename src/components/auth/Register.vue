@@ -45,14 +45,10 @@
                 required
               />
               <!-- Submit Button -->
-              <v-btn :loading="loading" type="submit" color="primary" block
-                >Đăng ký</v-btn
-              >
+              <v-btn :loading="loading" type="submit" color="primary" block>
+                Đăng ký
+              </v-btn>
             </v-form>
-            <!-- Error Message -->
-            <v-alert v-if="error" type="error" class="mt-4">{{
-              error
-            }}</v-alert>
           </v-card-text>
           <v-card-actions>
             <router-link to="/login">
@@ -62,6 +58,21 @@
         </v-card>
       </v-col>
     </v-row>
+
+    <!-- Alert Dialog -->
+    <v-dialog v-model="alert.show" persistent max-width="500">
+      <v-card>
+        <v-card-title class="headline text-center">
+          {{ alert.title }}
+        </v-card-title>
+        <v-card-text>
+          <p class="text-center">{{ alert.message }}</p>
+        </v-card-text>
+        <v-card-actions class="justify-center">
+          <v-btn color="primary" text @click="closeAlert">Đóng</v-btn>
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
   </v-container>
 </template>
 
@@ -76,8 +87,12 @@ export default {
       fullName: "",
       address: "",
       phone: "",
-      error: null,
       loading: false,
+      alert: {
+        show: false,
+        title: "",
+        message: "",
+      },
       // Quy tắc nhập liệu
       emailRule: [
         (v) => !!v || "Email không thể trống",
@@ -100,7 +115,7 @@ export default {
   methods: {
     handleRegister() {
       this.loading = true;
-      this.error = null; // reset error
+
       AuthService.register(
         this.email,
         this.password,
@@ -109,20 +124,48 @@ export default {
         this.phone
       )
         .then(() => {
-          // Đăng ký thành công, chuyển hướng đến trang login
-          this.$router.push("/login");
+          // Đăng ký thành công
+          this.showAlert(
+            "Thành công",
+            "Đăng ký thành công! Bạn sẽ được chuyển hướng tới trang Đăng nhập"
+          );
+          this.clearForm();
+
+          // Chuyển hướng sau 1,5 giấy
+          setTimeout(() => {
+            this.$router.push("/login");
+          }, 1500);
         })
         .catch(() => {
-          this.error = "Đăng ký thất bại. Vui lòng kiểm tra lại thông tin!";
+          // Đăng ký thất bại
+          this.showAlert("Thất bại", "Đăng ký thất bại. Vui lòng thử lại!");
+        })
+        .finally(() => {
           this.loading = false;
         });
+    },
+    showAlert(title, message) {
+      this.alert.title = title;
+      this.alert.message = message;
+      this.alert.show = true;
+    },
+    closeAlert() {
+      this.alert.show = false;
+    },
+    clearForm() {
+      this.email = "";
+      this.password = "";
+      this.fullName = "";
+      this.address = "";
+      this.phone = "";
     },
   },
 };
 </script>
 
 <style scoped>
-.error {
-  color: red;
+.v-container {
+  min-height: 100vh; /* Đảm bảo căn giữa theo chiều dọc */
+  background-color: #f5f5f5;
 }
 </style>

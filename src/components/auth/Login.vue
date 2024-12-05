@@ -24,14 +24,14 @@
                 prepend-icon="mdi-lock"
               />
               <!-- Submit Button -->
-              <v-btn :loading="loading" type="submit" color="primary" block
-                >Đăng nhập</v-btn
-              >
+              <v-btn :loading="loading" type="submit" color="primary" block>
+                Đăng nhập
+              </v-btn>
             </v-form>
             <!-- Error Message -->
-            <v-alert v-if="message" type="error" class="mt-4">{{
-              message
-            }}</v-alert>
+            <v-alert v-if="message" type="error" class="mt-4">
+              {{ message }}
+            </v-alert>
           </v-card-text>
           <v-card-actions>
             <router-link to="/register">
@@ -67,37 +67,28 @@ export default {
     };
   },
   methods: {
-    handleLogin() {
+    async handleLogin() {
       this.loading = true;
       this.message = "";
-      AuthService.login(this.email, this.password)
-        .then(() => {
-          const user = AuthService.getCurrentUser();
-          if (user) {
-            // Lưu thông tin người dùng vào localStorage
-            localStorage.setItem("isLoggedIn", true);
-            localStorage.setItem("username", user.username);
-            localStorage.setItem("role", AuthService.getCurrentUserRole());
-
-            // Chuyển hướng đến trang /home
-            this.$router.push("/home"); // Sử dụng this.$router.push để chuyển hướng
-          }
-          this.loading = false;
-        })
-        .catch((error) => {
-          this.message =
-            (error.response &&
-              error.response.data &&
-              error.response.data.message) ||
-            error.message ||
-            error.toString();
-          this.loading = false;
-        });
+      try {
+        // Gửi yêu cầu đăng nhập qua AuthService
+        const user = await AuthService.login(this.email, this.password);
+        if (user && user.token) {
+          this.$router.push("/home");
+        } else {
+          throw new Error("Đăng nhập thất bại!");
+        }
+      } catch (error) {
+        // Hiển thị lỗi nếu xảy ra vấn đề
+        this.message = error.message;
+      } finally {
+        this.loading = false;
+      }
     },
   },
 };
 </script>
 
 <style scoped>
-/* Thêm các style nếu cần */
+/* Style tùy chỉnh nếu cần */
 </style>
