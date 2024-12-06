@@ -35,6 +35,6 @@ export default {
 /* Định dạng tổng quan cho toàn bộ ứng dụng */
 body {
   margin: 0;
-  font-family: Arial, sans-serif;
+  font-family: "Inter", sans-serif;
 }
 </style>

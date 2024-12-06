@@ -29,7 +29,7 @@ export default {
   methods: {
     handleLogout() {
       AuthService.logout(); // Xóa thông tin người dùng khỏi localStorage
-      this.$router.push("/login"); // Chuyển hướng về trang đăng nhập
+      this.$router.push("/login");
     },
   },
 };

@@ -1,78 +1,93 @@
 <template>
-  <v-container fill-height>
+  <v-container class="fill-height d-flex align-center justify-center">
     <v-row align="center" justify="center">
-      <v-col cols="12" sm="8" md="4">
-        <v-card>
-          <v-card-title class="headline">Đăng ký tài khoản</v-card-title>
-          <v-card-text>
-            <v-form @submit.prevent="handleRegister">
-              <!-- Input Email -->
-              <v-text-field
-                v-model="email"
-                label="Email"
-                :rules="[emailRule]"
-                required
-                prepend-icon="mdi-email"
-              />
-              <!-- Input Password -->
-              <v-text-field
-                v-model="password"
-                label="Mật khẩu"
-                :rules="[passwordRule]"
-                type="password"
-                required
-                prepend-icon="mdi-lock"
-              />
-              <!-- Input Full Name -->
-              <v-text-field
-                v-model="fullName"
-                label="Họ tên"
-                :rules="[fullNameRule]"
-                required
-              />
-              <!-- Input Address -->
-              <v-text-field
-                v-model="address"
-                label="Địa chỉ"
-                :rules="[addressRule]"
-                required
-              />
-              <!-- Input Phone -->
-              <v-text-field
-                v-model="phone"
-                label="Số điện thoại"
-                :rules="[phoneRule]"
-                required
-              />
-              <!-- Submit Button -->
-              <v-btn :loading="loading" type="submit" color="primary" block>
-                Đăng ký
-              </v-btn>
-            </v-form>
-          </v-card-text>
-          <v-card-actions>
-            <router-link to="/login">
-              <v-btn text>Đã có tài khoản? Đăng nhập ngay!</v-btn>
+      <v-col cols="12" sm="8" md="6">
+        <v-card elevation="1" class="p-4 card-padding">
+          <h2 class="text-center header-title">ĐĂNG KÝ TÀI KHOẢN</h2>
+
+          <v-form @submit.prevent="handleRegister">
+            <!-- Input Email -->
+            <div class="field-label">Email</div>
+            <v-text-field
+              v-model="email"
+              outlined
+              :error-messages="errors.email"
+              class="mb-4"
+              required
+              @input="clearError('email')"
+            />
+
+            <!-- Input Password -->
+            <div class="field-label">Mật khẩu</div>
+            <v-text-field
+              v-model="password"
+              :type="showPassword ? 'text' : 'password'"
+              outlined
+              :error-messages="errors.password"
+              class="mb-4"
+              required
+              @input="clearError('password')"
+            />
+
+            <!-- Input Full Name -->
+            <div class="field-label">Họ tên</div>
+            <v-text-field
+              v-model="fullName"
+              outlined
+              :error-messages="errors.fullName"
+              class="mb-4"
+              required
+              @input="clearError('fullName')"
+            />
+
+            <!-- Input Address -->
+            <div class="field-label">Địa chỉ</div>
+            <v-text-field
+              v-model="address"
+              outlined
+              :error-messages="errors.address"
+              class="mb-4"
+              required
+              @input="clearError('address')"
+            />
+
+            <!-- Input Phone -->
+            <div class="field-label">Số điện thoại</div>
+            <v-text-field
+              v-model="phone"
+              outlined
+              :error-messages="errors.phone"
+              class="mb-4"
+              required
+              @input="clearError('phone')"
+            />
+
+            <!-- Trường ẩn: Hiển thị lỗi khi có lỗi chung -->
+            <div v-if="generalError" class="error-message mb-4">
+              {{ generalError }}
+            </div>
+
+            <!-- Nút Đăng ký -->
+            <v-btn
+              :loading="loading"
+              type="submit"
+              color="primary"
+              block
+              class="btn-padding"
+            >
+              Đăng ký
+            </v-btn>
+          </v-form>
+
+          <!-- Đường dẫn Đăng nhập -->
+          <div class="text-center mt-4">
+            <router-link to="/login" class="register-link">
+              Đã có tài khoản? Đăng nhập ngay!
             </router-link>
-          </v-card-actions>
+          </div>
         </v-card>
       </v-col>
     </v-row>
-
-    <!-- Alert Dialog -->
-    <v-dialog v-model="alert.show" persistent max-width="500">
-      <v-card>
-        <v-card-title class="headline text-center">
-          {{ alert.title }}
-        </v-card-title>
-        <v-card-text>
-          <p class="text-center">{{ alert.message }}</p>
-        </v-card-text>
-        <v-card-actions class="justify-center">
-          <v-btn color="primary" text @click="closeAlert">Đóng</v-btn>
-        </v-card-actions>
-      </v-card>
-    </v-dialog>
   </v-container>
 </template>
 
@@ -87,85 +102,127 @@ export default {
       fullName: "",
       address: "",
       phone: "",
+      showPassword: false,
       loading: false,
-      alert: {
-        show: false,
-        title: "",
-        message: "",
-      },
-      // Quy tắc nhập liệu
-      emailRule: [
-        (v) => !!v || "Email không thể trống",
-        (v) => /.+@.+\..+/.test(v) || "Email không hợp lệ",
-      ],
-      passwordRule: [
-        (v) => !!v || "Mật khẩu không thể trống",
-        (v) =>
-          (v && v.length >= 6 && v.length <= 15) ||
-          "Mật khẩu phải từ 6-15 ký tự",
-      ],
-      fullNameRule: [(v) => !!v || "Họ tên không thể trống"],
-      addressRule: [(v) => !!v || "Địa chỉ không thể trống"],
-      phoneRule: [
-        (v) => !!v || "Số điện thoại không thể trống",
-        (v) => /^[0-9]{10,11}$/.test(v) || "Số điện thoại không hợp lệ",
-      ],
+      generalError: "",
+      errors: {},
     };
   },
   methods: {
-    handleRegister() {
+    validateInput() {
+      // Reset lỗi
+      this.errors = {};
+
+      // Validate email
+      if (!this.email) {
+        this.errors.email = "Email không được để trống.";
+      } else if (!/^\S+@\S+\.\S+$/.test(this.email)) {
+        this.errors.email = "Email không đúng định dạng.";
+      }
+
+      // Validate password
+      if (!this.password) {
+        this.errors.password = "Mật khẩu không được để trống.";
+      } else if (this.password.length < 6 || this.password.length > 15) {
+        this.errors.password = "Mật khẩu phải từ 6-15 ký tự.";
+      }
+
+      // Validate full name
+      if (!this.fullName) {
+        this.errors.fullName = "Họ tên không được để trống.";
+      }
+
+      // Validate address
+      if (!this.address) {
+        this.errors.address = "Địa chỉ không được để trống.";
+      }
+
+      // Validate phone
+      if (!this.phone) {
+        this.errors.phone = "Số điện thoại không được để trống.";
+      } else if (!/^[0-9]{10,11}$/.test(this.phone)) {
+        this.errors.phone = "Số điện thoại không hợp lệ.";
+      }
+
+      // Trả về true nếu không có lỗi
+      return Object.keys(this.errors).length === 0;
+    },
+
+    clearError(field) {
+      // Xóa lỗi của trường cụ thể khi người dùng nhập lại
+      if (this.errors[field]) {
+        this.errors[field] = "";
+      }
+    },
+
+    async handleRegister() {
       this.loading = true;
+      this.generalError = "";
 
-      AuthService.register(
-        this.email,
-        this.password,
-        this.fullName,
-        this.address,
-        this.phone
-      )
-        .then(() => {
-          // Đăng ký thành công
-          this.showAlert(
-            "Thành công",
-            "Đăng ký thành công! Bạn sẽ được chuyển hướng tới trang Đăng nhập"
-          );
-          this.clearForm();
+      // Validate input
+      if (!this.validateInput()) {
+        this.loading = false;
+        return;
+      }
 
-          // Chuyển hướng sau 1,5 giấy
-          setTimeout(() => {
-            this.$router.push("/login");
-          }, 1500);
-        })
-        .catch(() => {
-          // Đăng ký thất bại
-          this.showAlert("Thất bại", "Đăng ký thất bại. Vui lòng thử lại!");
-        })
-        .finally(() => {
-          this.loading = false;
-        });
-    },
-    showAlert(title, message) {
-      this.alert.title = title;
-      this.alert.message = message;
-      this.alert.show = true;
-    },
-    closeAlert() {
-      this.alert.show = false;
-    },
-    clearForm() {
-      this.email = "";
-      this.password = "";
-      this.fullName = "";
-      this.address = "";
-      this.phone = "";
+      try {
+        await AuthService.register(
+          this.email,
+          this.password,
+          this.fullName,
+          this.address,
+          this.phone
+        );
+
+        // Đăng ký thành công
+        this.$router.push("/login");
+      } catch (error) {
+        // Hiển thị lỗi từ backend
+        this.generalError =
+          error?.message || "Đăng ký thất bại. Vui lòng thử lại!";
+      } finally {
+        this.loading = false;
+      }
     },
   },
 };
 </script>
 
 <style scoped>
-.v-container {
-  min-height: 100vh; /* Đảm bảo căn giữa theo chiều dọc */
-  background-color: #f5f5f5;
+.header-title {
+  margin-bottom: 24px;
+  font-size: 24px;
+  font-weight: bold;
+}
+
+.field-padding {
+  margin-bottom: 16px;
+}
+
+.card-padding {
+  padding: 30px;
+}
+
+.fill-height {
+  height: 100vh;
+}
+
+.mb-4 {
+  margin-bottom: 16px;
+}
+
+.register-link {
+  color: #007bff;
+  text-decoration: none;
+}
+
+.register-link:hover {
+  text-decoration: underline;
+}
+
+.error-message {
+  color: red;
+  font-weight: bold;
+  text-align: center;
 }
 </style>

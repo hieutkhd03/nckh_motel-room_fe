@@ -10,7 +10,7 @@ export default [
     name: "HomePage",
     component: HomePage,
     meta: {
-      requiresAuth: true, // Không yêu cầu đăng nhập
+      requiresAuth: false,
     },
   },
   {
