@@ -1,3 +1,22 @@
+<script setup>
+import { onMounted } from "vue";
+import * as AuthService from "@/services/AuthService";
+import { useRouter } from "vue-router";
+
+const router = useRouter();
+
+// Logout handler function
+const handleLogout = () => {
+  AuthService.logout(); // Xóa thông tin người dùng khỏi localStorage
+  router.push("/login");
+};
+
+// Using onMounted to trigger logout when the component is created
+onMounted(() => {
+  handleLogout();
+});
+</script>
+
 <template>
   <v-container fill-height>
     <v-row justify="center" align="center">
@@ -17,23 +36,6 @@
     </v-row>
   </v-container>
 </template>
-
-<script>
-import * as AuthService from "@/services/AuthService";
-
-export default {
-  name: "Logout",
-  created() {
-    this.handleLogout();
-  },
-  methods: {
-    handleLogout() {
-      AuthService.logout(); // Xóa thông tin người dùng khỏi localStorage
-      this.$router.push("/login");
-    },
-  },
-};
-</script>
 
 <style scoped>
 .logout-page {

@@ -1,3 +1,38 @@
+<script setup>
+import { ref, onMounted } from "vue";
+import * as AuthService from "@/services/AuthService";
+import { useRouter } from "vue-router";
+
+const token = ref(null);
+const fullName = ref("");
+const isAuthenticated = ref(false);
+const router = useRouter();
+
+// Check authentication status
+const checkAuthentication = () => {
+  const user = AuthService.getCurrentUser(); // Lấy thông tin từ AuthService
+  if (user && user.token) {
+    token.value = user.token;
+    fullName.value = user.fullName || "Người dùng"; // Giá trị dự phòng nếu không có fullName
+    isAuthenticated.value = true;
+  } else {
+    isAuthenticated.value = false;
+    console.warn("Không tìm thấy token hoặc người dùng chưa đăng nhập.");
+  }
+};
+
+// Logout function
+const logout = () => {
+  AuthService.logout(); // Xóa thông tin người dùng khỏi localStorage
+  router.push("/login"); // Chuyển hướng về trang đăng nhập
+};
+
+// Use onMounted to trigger checkAuthentication when the component is mounted
+onMounted(() => {
+  checkAuthentication();
+});
+</script>
+
 <template>
   <v-container>
     <v-row justify="center">
@@ -22,41 +57,6 @@
     </v-row>
   </v-container>
 </template>
-
-<script>
-import * as AuthService from "@/services/AuthService";
-
-export default {
-  name: "HomePage",
-  data() {
-    return {
-      token: null,
-      fullName: "",
-      isAuthenticated: false,
-    };
-  },
-  created() {
-    this.checkAuthentication();
-  },
-  methods: {
-    checkAuthentication() {
-      const user = AuthService.getCurrentUser(); // Lấy thông tin từ AuthService
-      if (user && user.token) {
-        this.token = user.token;
-        this.fullName = user.fullName || "Người dùng"; // Giá trị dự phòng nếu không có fullName
-        this.isAuthenticated = true;
-      } else {
-        this.isAuthenticated = false;
-        console.warn("Không tìm thấy token hoặc người dùng chưa đăng nhập.");
-      }
-    },
-    logout() {
-      AuthService.logout(); // Xóa thông tin người dùng khỏi localStorage
-      this.$router.push("/login"); // Chuyển hướng về trang đăng nhập
-    },
-  },
-};
-</script>
 
 <style scoped>
 .home-page {

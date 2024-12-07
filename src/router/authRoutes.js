@@ -25,7 +25,7 @@ export default [
     name: "Register",
     component: Register,
     meta: {
-      requiresAuth: false, // Không yêu cầu đăng nhập
+      requiresAuth: false,
     },
   },
 ];
