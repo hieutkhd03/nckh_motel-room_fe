@@ -2,6 +2,7 @@
 import Login from "@/components/auth/Login.vue";
 import Logout from "@/components/auth/Logout.vue";
 import Register from "@/components/auth/Register.vue";
+import Verify from "@/components/auth/Verify.vue";
 
 export default [
   {
@@ -26,6 +27,14 @@ export default [
     component: Register,
     meta: {
       requiresAuth: false,
+    },
+  },
+  {
+    path: "/verify",
+    name: "Verify",
+    component: Verify,
+    meta: {
+      requiresAuth: false, // Không yêu cầu đăng nhập
     },
   },
 ];

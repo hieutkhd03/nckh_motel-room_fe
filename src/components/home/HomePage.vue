@@ -8,12 +8,11 @@ const fullName = ref("");
 const isAuthenticated = ref(false);
 const router = useRouter();
 
-// Check authentication status
 const checkAuthentication = () => {
-  const user = AuthService.getCurrentUser(); // Lấy thông tin từ AuthService
+  const user = AuthService.getCurrentUser();
   if (user && user.token) {
     token.value = user.token;
-    fullName.value = user.fullName || "Người dùng"; // Giá trị dự phòng nếu không có fullName
+    fullName.value = user.fullName || "Người dùng";
     isAuthenticated.value = true;
   } else {
     isAuthenticated.value = false;
@@ -24,10 +23,9 @@ const checkAuthentication = () => {
 // Logout function
 const logout = () => {
   AuthService.logout(); // Xóa thông tin người dùng khỏi localStorage
-  router.push("/login"); // Chuyển hướng về trang đăng nhập
+  router.push("/login");
 };
 
-// Use onMounted to trigger checkAuthentication when the component is mounted
 onMounted(() => {
   checkAuthentication();
 });

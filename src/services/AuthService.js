@@ -42,6 +42,26 @@ export const register = (email, password, fullName, address, phone) => {
   );
 };
 
+// Xác thực tài khoản
+export const verifyAccount = (email, otp) => {
+  return axios.put("verify-account", { email, otp }).then((response) => {
+    if (response?.success) {
+      return response.data;
+    }
+    throw response.error;
+  });
+};
+
+// Gửi lại OTP
+export const regenerateOTP = (email) => {
+  return axios.put("regenerate-otp", { email }).then((response) => {
+    if (response?.success) {
+      return response.data;
+    }
+    throw response.error;
+  });
+};
+
 // Đăng xuất: Xóa thông tin người dùng khỏi localStorage
 export const logout = () => {
   localStorage.removeItem("user"); // Xóa thông tin người dùng trong localStorage
