@@ -2,44 +2,35 @@ import axios from "@/http";
 
 // Đăng nhập
 export const login = (email, password) => {
-  // eslint-disable-next-line no-undef
-  return (
-    axios
-      // eslint-disable-next-line no-undef
-      .post("login", { email, password })
-      .then((response) => {
-        console.log("response: ", response);
-        if (response?.success) {
-          // Lưu thông tin người dùng vào localStorage nếu success
-          const userData = response.data;
-          localStorage.setItem("user", JSON.stringify(userData));
-          return userData; // Trả về thông tin người dùng
-        }
-        throw response.error; // Ném lỗi từ backend để frontend xử lý
-      })
-  );
+  return axios.post("login", { email, password }).then((response) => {
+    console.log("response: ", response);
+    if (response?.success) {
+      // Lưu thông tin người dùng vào localStorage nếu success
+      const userData = response.data;
+      localStorage.setItem("user", JSON.stringify(userData));
+      return userData; // Trả về thông tin người dùng
+    }
+    throw response.error; // Ném lỗi từ backend để frontend xử lý
+  });
 };
 
 // Đăng ký
 export const register = (email, password, fullName, address, phone) => {
-  return (
-    axios
-      // eslint-disable-next-line no-undef
-      .post("register", {
-        email,
-        password,
-        fullName,
-        address,
-        phone,
-      }) // Gửi dữ liệu đăng ký
-      .then((response) => {
-        if (response?.success) {
-          return response.data; // Trả về dữ liệu phản hồi từ server nếu success là true
-        } else {
-          throw response.error; // Ném lỗi nếu success là false
-        }
-      })
-  );
+  return axios
+    .post("register", {
+      email,
+      password,
+      fullName,
+      address,
+      phone,
+    }) // Gửi dữ liệu đăng ký
+    .then((response) => {
+      if (response?.success) {
+        return response.data; // Trả về dữ liệu phản hồi từ server nếu success là true
+      } else {
+        throw response.error; // Ném lỗi nếu success là false
+      }
+    });
 };
 
 // Xác thực tài khoản
@@ -60,6 +51,18 @@ export const regenerateOTP = (email) => {
     }
     throw response.error;
   });
+};
+
+//Quên mật khẩu
+export const forgotPassword = (email, password, otp) => {
+  return axios
+    .put("forgot-password", { email, password, otp })
+    .then((response) => {
+      if (response?.success) {
+        return response.data;
+      }
+      throw response.error;
+    });
 };
 
 // Đăng xuất: Xóa thông tin người dùng khỏi localStorage

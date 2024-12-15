@@ -128,6 +128,7 @@ const clearError = (field) => {
               :error-messages="errors.email"
               class="mb-4"
               required
+              variant="solo-filled"
               @input="clearError('email')"
             />
 
@@ -140,6 +141,7 @@ const clearError = (field) => {
               :error-messages="errors.password"
               class="mb-4"
               required
+              variant="solo-filled"
               @input="clearError('password')"
             />
 
@@ -151,6 +153,7 @@ const clearError = (field) => {
               :error-messages="errors.fullName"
               class="mb-4"
               required
+              variant="solo-filled"
               @input="clearError('fullName')"
             />
 
@@ -162,6 +165,7 @@ const clearError = (field) => {
               :error-messages="errors.address"
               class="mb-4"
               required
+              variant="solo-filled"
               @input="clearError('address')"
             />
 
@@ -173,6 +177,7 @@ const clearError = (field) => {
               :error-messages="errors.phone"
               class="mb-4"
               required
+              variant="solo-filled"
               @input="clearError('phone')"
             />
 

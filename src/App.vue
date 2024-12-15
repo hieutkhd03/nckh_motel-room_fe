@@ -1,33 +1,15 @@
 <template>
   <v-app>
-    <!-- Header
-    <HeaderComponent />
-
-    Sidebar -->
-    <!-- <SidebarComponent /> -->
-
-    <!-- Nội dung chính -->
     <v-main>
       <router-view />
     </v-main>
-
-    <!-- Footer
-    <FooterComponent /> -->
   </v-app>
 </template>
 
 <script>
-// import HeaderComponent from "@/components/common/Header.vue";
-// import SidebarComponent from "@/components/common/Sidebar.vue";
-// import FooterComponent from "@/components/common/Footer.vue";
-
 export default {
   name: "App",
-  components: {
-    // HeaderComponent,
-    // SidebarComponent,
-    // FooterComponent,
-  },
+  components: {},
 };
 </script>
 

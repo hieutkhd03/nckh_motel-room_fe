@@ -79,7 +79,7 @@ const handleVerify = async () => {
     await AuthService.verifyAccount(props.email, otp);
 
     // Emit sự kiện "verified" để thông báo về thành công
-    emit("verified");
+    emit("verified", otp);
 
     // Dừng bộ đếm ngược
     clearInterval(timerInterval);
@@ -118,16 +118,6 @@ const clearError = () => {
 
 <template>
   <v-container class="fill-height d-flex align-center justify-center">
-    <!-- Success Alert -->
-    <v-card v-if="showAlert" class="success-alert-card" elevation="2" outlined>
-      <v-card-title class="success-alert-title">
-        <div class="success-alert-icon">
-          <v-icon color="green">mdi-check-circle</v-icon>
-        </div>
-        Xác thực thành công!
-      </v-card-title>
-    </v-card>
-
     <v-row align="center" justify="center">
       <v-col cols="12" sm="8" md="8">
         <h2 class="text-center header-title">XÁC THỰC TÀI KHOẢN</h2>
@@ -251,32 +241,5 @@ const clearError = () => {
 
 .resend-link:hover {
   text-decoration: underline;
-}
-
-.success-alert-card {
-  width: 85%;
-  max-width: 800px;
-  height: 280px;
-  text-align: center;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  position: fixed;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  z-index: 1000;
-  background-color: #f0f8ff;
-  border-radius: 10px;
-}
-
-.success-alert-title {
-  font-size: 50px;
-  font-weight: bold;
-  color: green;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  flex-direction: column;
 }
 </style>

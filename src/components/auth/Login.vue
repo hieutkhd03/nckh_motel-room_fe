@@ -10,6 +10,7 @@ const loading = ref(false);
 const errors = ref({});
 const generalError = ref("");
 const router = useRouter();
+const iconEye = ref("mdi-eye");
 
 const validateInput = () => {
   errors.value = {};
@@ -33,10 +34,12 @@ const clearError = (field) => {
   if (errors.value[field]) {
     errors.value[field] = "";
   }
+  generalError.value = "";
 };
 
 const togglePasswordVisibility = () => {
   showPassword.value = !showPassword.value;
+  iconEye.value = !showPassword.value ? "mdi-eye" : "mdi-eye-off";
 };
 
 const handleLogin = async () => {
@@ -77,6 +80,7 @@ const handleLogin = async () => {
               :error-messages="errors.email"
               class="mb-4"
               required
+              variant="solo-filled"
               @input="clearError('email')"
             />
 
@@ -87,8 +91,9 @@ const handleLogin = async () => {
               :type="showPassword ? 'text' : 'password'"
               outlined
               :error-messages="errors.password"
-              append-inner-icon="mdi-eye"
+              :append-inner-icon="iconEye"
               @click:append-inner="togglePasswordVisibility"
+              variant="solo-filled"
               class="mb-4"
               required
               @input="clearError('password')"
@@ -113,6 +118,12 @@ const handleLogin = async () => {
           <div class="text-center mt-4">
             <router-link to="/register" class="register-link">
               Chưa có tài khoản? Đăng ký ngay!
+            </router-link>
+          </div>
+
+          <div class="text-center mt-4">
+            <router-link to="/forgot-password" class="register-link">
+              Quên mật khẩu?
             </router-link>
           </div>
         </v-card>

@@ -1,20 +1,20 @@
 import { createRouter, createWebHistory } from "vue-router";
-import authRoutes from "./authRoutes"; // Import authRoutes
-import homeRoutes from "./homeRoutes"; // Import homeRoutes
-import postRoutes from "./postRoutes"; // Import postRoutes
-import typeRoutes from "./typeRoutes"; // Import typeRoutes
-import userRoutes from "./userRoutes"; // Import userRoutes
+import authRoutes from "./authRoutes";
+import homeRoutes from "./homeRoutes";
+import postRoutes from "./postRoutes";
+import typeRoutes from "./typeRoutes";
+import userRoutes from "./userRoutes";
 
 // Các route khác của ứng dụng
 const routes = [
-  ...authRoutes, // Các route cho auth module
-  ...homeRoutes, // Các route cho home module
-  ...postRoutes, // Các route cho post module
-  ...typeRoutes, // Các route cho type module
-  ...userRoutes, // Các route cho user module
+  ...authRoutes,
+  ...homeRoutes,
+  ...postRoutes,
+  ...typeRoutes,
+  ...userRoutes,
   {
     path: "/",
-    redirect: "/login", // Redirect mặc định đến Login
+    redirect: "/login",
   },
   {
     path: "/:pathMatch(.*)*",
