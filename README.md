@@ -49,14 +49,14 @@ Chạy lệnh sau để cài đặt tất cả các gói phụ thuộc cần thi
     ```bash
     npm install
     ```
-
+    
 3. **Cài đặt phụ thuộc**:
 
 Chạy lệnh sau để khởi chạy dự án tại [http://localhost:3000](http://localhost:3000):
 
     ```bash
     npm run dev
-    ```
+   ```
 
 ---
 
