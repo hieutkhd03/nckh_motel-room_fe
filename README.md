@@ -44,18 +44,18 @@ Dự án được phát triển bằng **Vue.js** và **Vuetify**, hỗ trợ c�
 
 2. **Cài đặt phụ thuộc**:
 
-Chạy lệnh sau để cài đặt tất cả các gói phụ thuộc cần thiết cho dự án:
+   Chạy lệnh sau để cài đặt tất cả các gói phụ thuộc cần thiết cho dự án:
 
-    ```bash
-    npm install
-    ```
-    
+   ```bash
+   npm install
+   ```
+
 3. **Cài đặt phụ thuộc**:
 
-Chạy lệnh sau để khởi chạy dự án tại [http://localhost:3000](http://localhost:3000):
+   Chạy lệnh sau để khởi chạy dự án tại [http://localhost:3000](http://localhost:3000):
 
-    ```bash
-    npm run dev
+   ```bash
+   npm run dev
    ```
 
 ---
